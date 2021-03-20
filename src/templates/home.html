@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block body %}
+<script>
+    $(document).ready(function () {
+        load_data();
+        function load_data(query) {
+            $.ajax({
+                url: "/ajaxlivesearch",
+                method: "POST",
+                data: { query: query },
+                success: function (data) {
+                    $('#result').html(data);
+                    $("#result").append(data.htmlresponse);
+                }
+            });
+        }
+        $('#search_text').keyup(function () {
+            var search = $(this).val();
+            if (search != '') {
+                load_data(search);
+            } else {
+                load_data();
+            }
+        });
+    });
+</script>
+
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-signin">
+            {{ form.hidden_tag() }}
+            <div style="display:inline-flex; color:black">
+                
+                {{ form.city.label() }}
+                {{ form.city(class="form-control" ,placeholder="City" ) }}
+                {{ form.country.label() }}
+                {{ form.country(class="form-control" ,placeholder="Country" ) }}
+                {{ form.submit(class="btn btn-lg btn-block btn-primary" ) }}
+            </div>
+        </form>
+    </div>
+
+</body>
+
+{% endblock %}
+{% block report %}
+{% endblock %}

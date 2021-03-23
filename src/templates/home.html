@@ -1,98 +1,72 @@
 {% extends 'base.html' %}
 {% block body %}
-<script>
-    $(document).ready(function () {
-        load_data();
-        function load_data(query) {
-            $.ajax({
-                url: "/ajaxlivesearch",
-                method: "POST",
-                data: { query: query },
-                success: function (data) {
-                    $('#result').html(data);
-                    $("#result").append(data.htmlresponse);
-                }
-            });
-        }
-        $('#search_text').keyup(function () {
-            var search = $(this).val();
-            if (search != '') {
-                load_data(search);
-            } else {
-                load_data();
-            }
-        });
-    });
-</script>
 
 <body class="text-center">
     <div class="container">
         <form id="weatherForm" action="{{ url_for('weatherUpdate') }}" method="post">
-            City : <input id="weatherInput" type="text" name="city"><br>
+            City : <input id="weatherInput" type="text" name="city" required>
             <input id="weatherSubmit" type="submit" value="Submit">
     </div>
     </form>
     </div>
-
 </body>
 
 {% block report %}
-{% if report != None %}
+{% if report != None and report['cod']==200 -%}
 <div class="card mb-3" style="max-width: 540px;">
     <div class="row g-0">
-      <div class="col-md-4">
-        <img src="..." alt="...">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">{{ report['name'] }}, {{ report['sys']['country'] }}</h5>
-          <p class="card-text">
-            {{ report['weather'][0]['main'] }} 
-            {{ report['weather'][0]['description'] }}
-            {{ report['weather'][0]['icon'] }} 
-            {{ report['main']['temp'] }}
-            {{ report['main']['feels_like'] }}
-            {{ report['main']['temp_min'] }}
-            {{ report['main']['temp_max'] }}
-            {{ report['main']['pressure'] }} 
-            {{ report['main']['humidity'] }}
-            {{ report['main']['sea_level'] }}
-          </p>
+        <div class="col-md-4">
+            <img src="http://openweathermap.org/img/wn/{{ report['weather'][0]['icon'] }}@4x.png" alt="...">
         </div>
-      </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ report['name'] }}, {{ report['sys']['country'] }}, {{ report['dt'] }}</h5>
+                <p class="card-text">
+                    <strong>{{ report['weather'][0]['main'] }}</strong><br>
+                    Description : {{ report['weather'][0]['description'] }}<br>
+                    Temperature : {{ report['main']['temp'] }}&degF<br>
+                    Feels Like : {{ report['main']['feels_like'] }}&degF<br>
+                    Min Temperature : {{ report['main']['temp_min'] }}&degF<br>
+                    Max Temperature : {{ report['main']['temp_max'] }}&degF<br>
+                    Pressure : {{ report['main']['pressure'] }} millibars<br>
+                    Humidity : {{ report['main']['humidity'] }}<span>&#37;</span><br>
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
-{% endif %}
-{% endblock %}
+</div>
+{% else %}
+<p>City not Found
+<p>
+    {% endif %}
+    {% endblock %}
 
 <div class="container">
-    <form id="weatherForm" action="{{ url_for('weatherUpdate1') }}" method="post">
-        City : <input id="weatherInput" type="text" name="city"><br>
-        <input id="weatherSubmit" type="submit" value="Add City">
+    <form  action="{{ url_for('addcity') }}" method="post">
+        City : <input type="text" name="add_city" required>
+        <input type="submit" value="Add City">
 </div>
 </form>
 
 {% for city in cities %}
-
+{% set reports = ureport(city.city_name) %}
 <div class="card mb-3" style="max-width: 540px;">
     <div class="row g-0">
         <div class="col-md-4">
-            <img src="..." alt="...">
+            <img src="http://openweathermap.org/img/wn/{{ reports['weather'][0]['icon'] }}@4x.png" alt="...">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">{{ ureport(city.city_name)['name'] }}, {{ ureport(city.city_name)['sys']['country'] }}</h5>
+                <h5 class="card-title">{{ reports['name'] }}, {{ reports['sys']['country'] }}, {{ reports['dt'] }}</h5>
                 <p class="card-text">
-                    {{ ureport(city.city_name)['weather'][0]['main'] }}
-                    {{ ureport(city.city_name)['weather'][0]['description'] }}
-                    {{ ureport(city.city_name)['weather'][0]['icon'] }}
-                    {{ ureport(city.city_name)['main']['temp'] }}
-                    {{ ureport(city.city_name)['main']['feels_like'] }}
-                    {{ ureport(city.city_name)['main']['temp_min'] }}
-                    {{ ureport(city.city_name)['main']['temp_max'] }}
-                    {{ ureport(city.city_name)['main']['pressure'] }}
-                    {{ ureport(city.city_name)['main']['humidity'] }}
-                    {{ ureport(city.city_name)['main']['sea_level'] }}
+                    <strong>{{ reports['weather'][0]['main'] }}</strong><br>
+                    Description : {{ reports['weather'][0]['description'] }}<br>
+                    Temperature : {{ reports['main']['temp'] }}&degF<br>
+                    Feels Like : {{ reports['main']['feels_like'] }}&degF<br>
+                    Min Temperature : {{ reports['main']['temp_min'] }}&degF<br>
+                    Max Temperature : {{ reports['main']['temp_max'] }}&degF<br>
+                    Pressure : {{ reports['main']['pressure'] }} millibars<br>
+                    Humidity : {{ reports['main']['humidity'] }}<span>&#37;</span><br>
                 </p>
             </div>
         </div>

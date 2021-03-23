@@ -1,11 +1,9 @@
 from json import loads
 from src import db
 import requests
+from flask import request,flash
 
 class City(db.Model):
-    city_name = db.Column(db.String(100), nullable=False, primary_key=True )
-
-class Citys(db.Model):
     city_name = db.Column(db.String(100), nullable=False, primary_key=True )
 
 def weatherReport(city):
@@ -15,8 +13,6 @@ def weatherReport(city):
     response = requests.get(api)
     data = response.json()
     return data
-
-cities = City.query.all()
 
 
 

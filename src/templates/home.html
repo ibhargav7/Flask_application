@@ -4,74 +4,99 @@
 <body class="text-center">
     <div class="container">
         <form id="weatherForm" action="{{ url_for('weatherUpdate') }}" method="post">
-            City : <input id="weatherInput" type="text" name="city" required>
-            <input id="weatherSubmit" type="submit" value="Submit">
+            <input style="padding: 5px; border-radius: 5px; margin: 5px;width: 500px;" id="weatherInput" type="text" name="city"
+                placeholder="Enter the City" required>
+            <input style="padding: 5px; border-radius: 5px; margin: 5px;  " id="weatherSubmit" type="submit"
+                value="Submit">
     </div>
     </form>
     </div>
 </body>
 
 {% block report %}
-{% if report != None and report['cod']==200 -%}
-<div class="card mb-3" style="max-width: 540px;">
+{% if report != None and report['cod']==200 %}
+<div class="card mb-3" style="padding: 20px;">
     <div class="row g-0">
-        <div class="col-md-4">
+        <div class="col-md-4 ">
             <img src="http://openweathermap.org/img/wn/{{ report['weather'][0]['icon'] }}@4x.png" alt="...">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">{{ report['name'] }}, {{ report['sys']['country'] }}, {{ report['dt'] }}</h5>
-                <p class="card-text">
-                    <strong>{{ report['weather'][0]['main'] }}</strong><br>
-                    Description : {{ report['weather'][0]['description'] }}<br>
-                    Temperature : {{ report['main']['temp'] }}&degF<br>
-                    Feels Like : {{ report['main']['feels_like'] }}&degF<br>
-                    Min Temperature : {{ report['main']['temp_min'] }}&degF<br>
-                    Max Temperature : {{ report['main']['temp_max'] }}&degF<br>
-                    Pressure : {{ report['main']['pressure'] }} millibars<br>
-                    Humidity : {{ report['main']['humidity'] }}<span>&#37;</span><br>
-                </p>
+                <h5 class="card-title">{{ report['name'] }}, {{ report['sys']['country'] }}, <h5
+                        style="color: #e96e50;">{{ report['weather'][0]['main'] }}</h5>
+                </h5>
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <p class="card-text">
+                            Description : {{ report['weather'][0]['description'] }}<br>
+                            Pressure : {{ report['main']['pressure'] }} millibars<br>
+                            Humidity : {{ report['main']['humidity'] }}<span>&#37;</span><br>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="card-text">
+
+                            Temperature : {{ report['main']['temp'] }}&degF<br>
+                            Feels Like : {{ report['main']['feels_like'] }}&degF<br>
+                            Min Temperature : {{ report['main']['temp_min'] }}&degF<br>
+                            Max Temperature : {{ report['main']['temp_max'] }}&degF<br>
+
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+{% elif report != None and report['cod']==404 %}
+<p>City not Found</p>
 {% else %}
-<p>City not Found
-<p>
-    {% endif %}
-    {% endblock %}
+
+{% endif %}
+{% endblock %}
 
 <div class="container">
-    <form  action="{{ url_for('addcity') }}" method="post">
-        City : <input type="text" name="add_city" required>
-        <input type="submit" value="Add City">
+    <form action="{{ url_for('addcity') }}" method="post">
+        <input style="padding: 5px; border-radius: 5px; margin: 5px;width: 500px;" type="text" name="add_city"
+            placeholder="Enter the City" required>
+        <input style="padding: 5px; border-radius: 5px; margin: 5px; " type="submit" value="Add City">
 </div>
 </form>
 
 {% for city in cities %}
 {% set reports = ureport(city.city_name) %}
-<div class="card mb-3" style="max-width: 540px;">
+<div class="card mb-3" style="padding: 20px; ">
     <div class="row g-0">
         <div class="col-md-4">
             <img src="http://openweathermap.org/img/wn/{{ reports['weather'][0]['icon'] }}@4x.png" alt="...">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">{{ reports['name'] }}, {{ reports['sys']['country'] }}, {{ reports['dt'] }}</h5>
-                <p class="card-text">
-                    <strong>{{ reports['weather'][0]['main'] }}</strong><br>
-                    Description : {{ reports['weather'][0]['description'] }}<br>
-                    Temperature : {{ reports['main']['temp'] }}&degF<br>
-                    Feels Like : {{ reports['main']['feels_like'] }}&degF<br>
-                    Min Temperature : {{ reports['main']['temp_min'] }}&degF<br>
-                    Max Temperature : {{ reports['main']['temp_max'] }}&degF<br>
-                    Pressure : {{ reports['main']['pressure'] }} millibars<br>
-                    Humidity : {{ reports['main']['humidity'] }}<span>&#37;</span><br>
-                </p>
+                <h5 class="card-title">{{ reports['name'] }}, {{ reports['sys']['country'] }},  <h5
+                        style="color: #e96e50;">{{ reports['weather'][0]['main'] }}</h5>
+                </h5>
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <p class="card-text">
+                            Description : {{ reports['weather'][0]['description'] }}<br>
+                            Pressure : {{ reports['main']['pressure'] }} millibars<br>
+                            Humidity : {{ reports['main']['humidity'] }}<span>&#37;</span><br>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="card-text">
+
+                            Temperature : {{ reports['main']['temp'] }}&degF<br>
+                            Feels Like : {{ reports['main']['feels_like'] }}&degF<br>
+                            Min Temperature : {{ reports['main']['temp_min'] }}&degF<br>
+                            Max Temperature : {{ reports['main']['temp_max'] }}&degF<br>
+
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-{% endfor %}
+    {% endfor %}
 </div>
 {% endblock %}
